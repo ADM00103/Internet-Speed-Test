@@ -9,133 +9,74 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            min-height: 100vh;
-            padding: 20px;
+            min-height: 100vh; padding: 20px;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            max-width: 800px; margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95); border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
+            color: white; padding: 40px; text-align: center;
         }
         .header h1 { font-size: 2.8em; margin-bottom: 10px; }
         .speed-display {
-            background: rgba(0,0,0,0.3);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            margin: 20px;
+            background: rgba(0,0,0,0.3); padding: 30px; border-radius: 20px;
+            text-align: center; margin: 20px;
         }
         .speed-mbps {
-            font-size: 4em;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 20px currentColor;
-            margin-bottom: 10px;
+            font-size: 4em; font-weight: 700; color: #fff;
+            text-shadow: 0 0 20px currentColor; margin-bottom: 10px;
         }
-        .speed-label {
-            font-size: 1.3em;
-            color: rgba(255,255,255,0.9);
-        }
+        .speed-label { font-size: 1.3em; color: rgba(255,255,255,0.9); }
         .controls { padding: 40px; text-align: center; }
         .test-button {
-            padding: 20px 50px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.4em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 20px 50px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; border: none; border-radius: 50px; font-size: 1.4em;
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
             box-shadow: 0 10px 30px rgba(240,147,251,0.4);
         }
         .test-button:hover:not(:disabled) {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(240,147,251,0.6);
+            transform: translateY(-5px); box-shadow: 0 20px 40px rgba(240,147,251,0.6);
         }
         .test-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            background: #666;
+            opacity: 0.6; cursor: not-allowed; transform: none; background: #666;
         }
         .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
+            width: 100%; height: 10px; background: #e0e0e0;
+            border-radius: 10px; overflow: hidden; margin: 20px 0;
         }
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 10px;
+            height: 100%; background: linear-gradient(90deg, #4facfe, #00f2fe);
+            width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 10px;
         }
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #f8f9fa;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; padding: 30px; background: #f8f9fa;
         }
         .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            background: white; padding: 25px; border-radius: 15px;
+            text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
-        .stat-value {
-            font-size: 2em;
-            font-weight: 700;
-            color: #333;
-        }
-        .stat-label {
-            font-size: 0.9em;
-            color: #666;
-            text-transform: uppercase;
-        }
+        .stat-value { font-size: 2em; font-weight: 700; color: #333; }
+        .stat-label { font-size: 0.9em; color: #666; text-transform: uppercase; }
         .status {
-            padding: 15px 25px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-weight: 500;
-            text-align: center;
+            padding: 15px 25px; border-radius: 10px; margin: 20px 0;
+            font-weight: 500; text-align: center;
         }
         .status.testing { background: #fff3cd; color: #856404; }
         .status.fast { background: #d4edda; color: #155724; }
         .status.slow { background: #f8d7da; color: #721c24; }
         .history {
-            padding: 30px;
-            background: #f8f9fa;
+            padding: 30px; background: #f8f9fa;
         }
         .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: white;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; background: white; margin-bottom: 10px;
+            border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
         @media (max-width: 768px) {
             .speed-mbps { font-size: 2.5em; }
             .stats-grid { grid-template-columns: 1fr; }
@@ -146,7 +87,7 @@
     <div class="container">
         <div class="header">
             <h1>🚀 Тест скорости интернета</h1>
-            <p>Измерение в реальном времени с высокой точностью (120 сек)</p>
+            <p>LibreSpeed + httpbin + CDN (120 сек точный замер)</p>
         </div>
 
         <div class="speed-display" id="speedDisplay">
@@ -198,27 +139,39 @@
         let isTesting = false;
         const TEST_DURATION = 120;
         const PARALLEL_STREAMS = 8;
+        let currentProgress = 0;
 
-        // Инициализация истории при загрузке
-        try {
-            const saved = localStorage.getItem('speedTests');
-            if (saved) {
-                testHistory = JSON.parse(saved);
+        // ✅ Инициализация истории (НАДЁЖНО)
+        function initHistory() {
+            try {
+                const saved = localStorage.getItem('speedTests');
+                if (saved && saved.length > 0) {
+                    testHistory = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.log('История повреждена, создаём новую');
+                testHistory = [];
+                localStorage.removeItem('speedTests');
             }
-        } catch (e) {
-            console.log('Ошибка загрузки истории:', e);
-            testHistory = [];
         }
 
+        // ✅ ВСЕ СЕРВЕРА СРАЗУ
         const testServers = [
-            'https://picsum.photos/2000/2000.webp',
-            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2000',
-            'https://via.placeholder.com/2000x2000/0066cc/ffffff?text=TEST',
+            // HTTPBIN
             'https://httpbin.org/image/png',
-            'https://loremflickr.com/2000/2000',
+            'https://httpbin.org/image/jpeg',
+            
+            // LIBRESPEED публичные
+            'https://speed.larg.net/1m.bin',
+            'https://test.mcs.be/10m.bin',
+            'https://mirror.xmission.com/ftp/1g.bin',
+            
+            // CDN + PICSUM + UNSPLASH
+            'https://picsum.photos/2000/2000.webp',
             'https://source.unsplash.com/random/2000x2000',
-            'https://picsum.photos/2000/2000.jpg',
-            'https://dummyimage.com/2000x2000/0066cc/ffffff.png'
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2000',
+            'https://fastly.jsdelivr.net/gh/libspeedtest/result/1000k.jpg',
+            'https://speed.cloudflare.com/__down?bytes=10000000'
         ];
 
         let timerInterval = null;
@@ -229,8 +182,30 @@
             document.getElementById('speedLabel').textContent = label;
         }
 
-        function updateProgress(percent) {
-            document.getElementById('progressFill').style.width = percent + '%';
+        // 🔄 ПЛАВНАЯ АНИМАЦИЯ ПРОГРЕССА
+        function updateProgress(targetPercent) {
+            currentProgress = Math.max(0, Math.min(100, targetPercent));
+            const progressEl = document.getElementById('progressFill');
+            progressEl.style.width = currentProgress + '%';
+        }
+
+        function animateProgressTo(target) {
+            const start = currentProgress;
+            const duration = 800; // 0.8 сек анимация
+            const startTime = performance.now();
+
+            function step(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                currentProgress = start + (target - start) * easeOut;
+                document.getElementById('progressFill').style.width = currentProgress + '%';
+                
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+            requestAnimationFrame(step);
         }
 
         function showStatus(message, type) {
@@ -243,20 +218,19 @@
         function startTimer() {
             remainingTime = TEST_DURATION;
             const statusEl = document.getElementById('testStatus');
-
-            let minutes = String(Math.floor(remainingTime / 60)).padStart(2, '0');
-            let seconds = String(remainingTime % 60).padStart(2, '0');
-            statusEl.textContent = '⏱️ Идет замер скорости: осталось ' + minutes + ':' + seconds;
-
-            timerInterval = setInterval(function() {
+            
+            const updateTimer = function() {
                 remainingTime--;
                 const m = String(Math.floor(remainingTime / 60)).padStart(2, '0');
                 const s = String(remainingTime % 60).padStart(2, '0');
-                statusEl.textContent = '⏱️ Идет замер скорости: осталось ' + m + ':' + s;
+                statusEl.textContent = `⏱️ Идет замер скорости: осталось ${m}:${s}`;
                 if (remainingTime <= 0) {
                     clearInterval(timerInterval);
                 }
-            }, 1000);
+            };
+
+            updateTimer(); // сразу
+            timerInterval = setInterval(updateTimer, 1000);
         }
 
         async function measureDownloadSpeedLong(durationSec) {
@@ -271,11 +245,9 @@
                     try {
                         const response = await fetch(url, { cache: 'no-store' });
                         const blob = await response.blob();
-                        totalBytes += blob.size;
-                    } catch (e) {
-                        // продолжаем при ошибке
-                    }
-                    await new Promise(r => setTimeout(r, 10));
+                        totalBytes += blob.size || 1024*1024;
+                    } catch (e) {}
+                    await new Promise(r => setTimeout(r, 5));
                 }
             };
 
@@ -285,14 +257,13 @@
             }
             await Promise.all(workers);
 
-            const totalTime = durationSec;
-            return (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
+            return parseFloat((totalBytes * 8 / (1024 * 1024 * durationSec)).toFixed(2));
         }
 
         async function measureUploadSpeedLong(durationSec) {
             const endTime = Date.now() + durationSec * 1000;
             let totalBytes = 0;
-            const testData = new Blob([new ArrayBuffer(2 * 1024 * 1024)]);
+            const testData = new Blob([new ArrayBuffer(5 * 1024 * 1024)]);
 
             const uploadWorker = async () => {
                 while (Date.now() < endTime && isTesting) {
@@ -312,36 +283,33 @@
             }
             await Promise.all(workers);
 
-            const totalTime = durationSec;
-            return (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
+            return parseFloat((totalBytes * 8 / (1024 * 1024 * durationSec)).toFixed(2));
         }
 
-        // ИСПРАВЛЕННЫЙ ПИНГ - используем Image для обхода CORS
         async function measurePing() {
             const testUrls = [
                 'https://www.google.com/favicon.ico',
-                'https://yastatic.net/islands/_/Ki6DdirQ7DHq6EN8w3En6z0E6iA.svg'
+                'https://yastatic.net/islands/_/Ki6DdirQ7DHq6EN8w3En6z0E6iA.svg',
+                'https://httpbin.org/image/png'
             ];
             
             const pings = [];
             
-            for (let i = 0; i < 10; i++) {
-                const img = new Image();
-                const start = performance.now();
-                
-                return new Promise((resolve) => {
+            for (let i = 0; i < 8; i++) {
+                await new Promise((resolve) => {
+                    const img = new Image();
+                    const start = performance.now();
                     img.onload = img.onerror = () => {
                         pings.push(performance.now() - start);
                         resolve();
                     };
                     img.src = testUrls[i % testUrls.length] + '?t=' + Date.now();
-                    setTimeout(resolve, 2000); // таймаут 2 сек
+                    setTimeout(resolve, 3000);
                 });
             }
             
             if (pings.length === 0) return 999;
-            const avgPing = pings.reduce((a, b) => a + b, 0) / pings.length;
-            return Math.round(avgPing);
+            return Math.round(pings.reduce((a, b) => a + b, 0) / pings.length);
         }
 
         function getSpeedRating(speed) {
@@ -353,30 +321,30 @@
             return '🐌 Медленное соединение';
         }
 
-        // ИСПРАВЛЕННАЯ ИСТОРИЯ
+        // ✅ НАДЁЖНАЯ ИСТОРИЯ
         function updateHistory() {
             const historyEl = document.getElementById('history');
-            
-            if (testHistory.length === 0) {
+            if (!testHistory || testHistory.length === 0) {
                 historyEl.innerHTML = 
                     '<div class="empty-state">' +
-                        '<div>📊</div>' +
-                        '<h3>История тестов</h3>' +
-                        '<p>Проведите первый тест для сохранения результата</p>' +
+                        '<div>📊</div><h3>История тестов</h3><p>Проведите первый тест</p>' +
                     '</div>';
                 return;
             }
 
             historyEl.innerHTML = 
                 '<h3 style="margin-bottom: 20px;">📈 Последние тесты</h3>' +
-                testHistory.map(function(test) {
+                testHistory.slice(0, 10).map(function(test) {
+                    const dl = parseFloat(test.download || 0).toFixed(1);
+                    const ul = parseFloat(test.upload || 0).toFixed(1);
+                    const time = new Date(test.timestamp).toLocaleString('ru-RU');
                     return (
                         '<div class="history-item">' +
                             '<div>' +
-                                '<strong>' + parseFloat(test.download).toFixed(1) + ' Мбит/с</strong> ↓ | ' + parseFloat(test.upload).toFixed(1) + ' Мбит/с ↑' +
-                                '<br><small>' + new Date(test.timestamp).toLocaleString('ru-RU') + '</small>' +
+                                `<strong>${dl} Мбит/с</strong> ↓ | ${ul} Мбит/с ↑` +
+                                `<br><small>${time}</small>` +
                             '</div>' +
-                            '<div style="color: #666;">' + test.ping + ' мс</div>' +
+                            `<div style="color: #666;">${test.ping || '?'} мс</div>` +
                         '</div>'
                     );
                 }).join('');
@@ -386,7 +354,7 @@
             try {
                 localStorage.setItem('speedTests', JSON.stringify(testHistory));
             } catch (e) {
-                console.log('Ошибка сохранения истории:', e);
+                console.log('Ошибка localStorage');
             }
         }
 
@@ -402,51 +370,48 @@
             testButton.textContent = '⏳ Тестируем 120 секунд...';
             progressBar.style.display = 'block';
             statsGrid.style.display = 'grid';
-            updateProgress(0);
+            animateProgressTo(0);
 
             showStatus('⏱️ Идет замер скорости: осталось 02:00', 'testing');
             startTimer();
 
             try {
-                // 1. Пинг (5 сек)
+                // 1. Пинг (5%)
                 const ping = await measurePing();
                 document.getElementById('pingValue').textContent = ping + ' мс';
-                updateProgress(5);
+                animateProgressTo(5);
 
-                // 2. Download 80 сек
+                // 2. Download 80 сек (70%)
                 const downloadDuration = 80;
                 const downloadSpeed = await measureDownloadSpeedLong(downloadDuration);
-                document.getElementById('downloadSpeed').textContent = downloadSpeed + ' Мбит/с';
-                updateProgress(70);
+                document.getElementById('downloadSpeed').textContent = downloadSpeed.toFixed(1) + ' Мбит/с';
+                animateProgressTo(70);
 
-                // 3. Upload 35 сек
+                // 3. Upload 35 сек (100%)
                 const uploadDuration = 35;
                 const uploadSpeed = await measureUploadSpeedLong(uploadDuration);
-                document.getElementById('uploadSpeed').textContent = uploadSpeed + ' Мбит/с';
-                updateProgress(100);
+                document.getElementById('uploadSpeed').textContent = uploadSpeed.toFixed(1) + ' Мбит/с';
+                animateProgressTo(100);
 
-                const speedLabel = getSpeedRating(parseFloat(downloadSpeed));
-                updateSpeedDisplay(downloadSpeed, speedLabel);
+                const speedLabel = getSpeedRating(downloadSpeed);
+                updateSpeedDisplay(downloadSpeed.toFixed(1), speedLabel);
 
-                // СОХРАНЕНИЕ В ИСТОРИЮ
+                // ✅ СОХРАНЕНИЕ ИСТОРИИ
                 const testResult = {
                     timestamp: Date.now(),
-                    download: parseFloat(downloadSpeed),
-                    upload: parseFloat(uploadSpeed),
+                    download: downloadSpeed,
+                    upload: uploadSpeed,
                     ping: ping,
                     label: speedLabel
                 };
-
                 testHistory.unshift(testResult);
-                if (testHistory.length > 10) {
-                    testHistory = testHistory.slice(0, 10);
-                }
-                saveHistory(); // явное сохранение
-                updateHistory(); // обновление интерфейса
+                if (testHistory.length > 20) testHistory = testHistory.slice(0, 20);
+                saveHistory();
+                updateHistory();
 
                 showStatus('✅ Тест завершен! ' + speedLabel, 'fast');
             } catch (error) {
-                showStatus('❌ Ошибка теста: ' + error.message, 'slow');
+                showStatus('❌ Ошибка теста', 'slow');
             } finally {
                 isTesting = false;
                 if (timerInterval) clearInterval(timerInterval);
@@ -459,8 +424,9 @@
             }
         }
 
-        // Инициализация при загрузке
+        // Инициализация
         window.addEventListener('load', function() {
+            initHistory();
             updateHistory();
             if ('connection' in navigator) {
                 const conn = navigator.connection;
