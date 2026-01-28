@@ -146,7 +146,7 @@
     <div class="container">
         <div class="header">
             <h1>🚀 Тест скорости интернета</h1>
-            <p>Измерение в реальном времени с высокой точностью</p>
+            <p>Измерение в реальном времени с высокой точностью (120 сек)</p>
         </div>
 
         <div class="speed-display" id="speedDisplay">
@@ -161,7 +161,7 @@
             <div class="progress-bar" id="progressBar" style="display: none;">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="status testing" id="testStatus" style="display: none;"></div>
+            <div class="status" id="testStatus" style="display: none;"></div>
         </div>
 
         <div class="stats-grid" id="statsGrid" style="display: none;">
@@ -193,14 +193,32 @@
     </div>
 
     <script>
-        let testHistory = JSON.parse(localStorage.getItem('speedTests')) || [];
+        // Глобальные переменные
+        let testHistory = [];
         let isTesting = false;
-        const TEST_DURATION = 120; // секунд
+        const TEST_DURATION = 120;
+        const PARALLEL_STREAMS = 8;
 
-        const testFiles = [
-            'https://picsum.photos/1000/1000.webp',
-            'https://picsum.photos/1200/1200.webp',
-            'https://picsum.photos/1600/1600.webp'
+        // Инициализация истории при загрузке
+        try {
+            const saved = localStorage.getItem('speedTests');
+            if (saved) {
+                testHistory = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.log('Ошибка загрузки истории:', e);
+            testHistory = [];
+        }
+
+        const testServers = [
+            'https://picsum.photos/2000/2000.webp',
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2000',
+            'https://via.placeholder.com/2000x2000/0066cc/ffffff?text=TEST',
+            'https://httpbin.org/image/png',
+            'https://loremflickr.com/2000/2000',
+            'https://source.unsplash.com/random/2000x2000',
+            'https://picsum.photos/2000/2000.jpg',
+            'https://dummyimage.com/2000x2000/0066cc/ffffff.png'
         ];
 
         let timerInterval = null;
@@ -226,12 +244,11 @@
             remainingTime = TEST_DURATION;
             const statusEl = document.getElementById('testStatus');
 
-            // сразу показать стартовое значение
             let minutes = String(Math.floor(remainingTime / 60)).padStart(2, '0');
             let seconds = String(remainingTime % 60).padStart(2, '0');
             statusEl.textContent = '⏱️ Идет замер скорости: осталось ' + minutes + ':' + seconds;
 
-            timerInterval = setInterval(() => {
+            timerInterval = setInterval(function() {
                 remainingTime--;
                 const m = String(Math.floor(remainingTime / 60)).padStart(2, '0');
                 const s = String(remainingTime % 60).padStart(2, '0');
@@ -243,81 +260,92 @@
         }
 
         async function measureDownloadSpeedLong(durationSec) {
-            const endTime = performance.now() + durationSec * 1000;
+            const endTime = Date.now() + durationSec * 1000;
             let totalBytes = 0;
-            let fileIndex = 0;
-            const startTotal = endTime - durationSec * 1000;
 
-            while (performance.now() < endTime && isTesting) {
-                const url = testFiles[fileIndex % testFiles.length] + '?t=' + Date.now();
-                fileIndex++;
+            const downloadWorker = async () => {
+                while (Date.now() < endTime && isTesting) {
+                    const serverIndex = Math.floor(Math.random() * testServers.length);
+                    const url = testServers[serverIndex] + '?t=' + Date.now();
 
-                try {
-                    const startChunk = performance.now();
-                    const response = await fetch(url, { cache: 'no-store' });
-                    const blob = await response.blob();
-                    totalBytes += blob.size;
-
-                    const elapsedPart = (performance.now() - startTotal) / (durationSec * 1000);
-                    updateProgress(Math.min(90, Math.max(10, elapsedPart * 90)));
-
-                    const chunkTime = performance.now() - startChunk;
-                    if (chunkTime < 50) {
-                        await new Promise(function (r) { setTimeout(r, 50 - chunkTime); });
+                    try {
+                        const response = await fetch(url, { cache: 'no-store' });
+                        const blob = await response.blob();
+                        totalBytes += blob.size;
+                    } catch (e) {
+                        // продолжаем при ошибке
                     }
-                } catch (e) {
-                    // игнорируем ошибку и идём дальше
+                    await new Promise(r => setTimeout(r, 10));
                 }
+            };
+
+            const workers = [];
+            for (let i = 0; i < PARALLEL_STREAMS; i++) {
+                workers.push(downloadWorker());
             }
+            await Promise.all(workers);
 
             const totalTime = durationSec;
-            const speedMbps = (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
-            return parseFloat(speedMbps);
+            return (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
         }
 
         async function measureUploadSpeedLong(durationSec) {
-            const endTime = performance.now() + durationSec * 1000;
+            const endTime = Date.now() + durationSec * 1000;
             let totalBytes = 0;
+            const testData = new Blob([new ArrayBuffer(2 * 1024 * 1024)]);
 
-            const testData = new Blob([new ArrayBuffer(512 * 1024)]);
-
-            while (performance.now() < endTime && isTesting) {
-                try {
-                    await fetch('https://httpbin.org/post', {
-                        method: 'POST',
-                        body: testData,
-                        headers: { 'Cache-Control': 'no-cache' }
-                    });
-                    totalBytes += testData.size;
-                } catch (e) {
-                    // игнорируем
+            const uploadWorker = async () => {
+                while (Date.now() < endTime && isTesting) {
+                    try {
+                        await fetch('https://httpbin.org/post', {
+                            method: 'POST',
+                            body: testData
+                        });
+                        totalBytes += testData.size;
+                    } catch (e) {}
                 }
+            };
+
+            const workers = [];
+            for (let i = 0; i < 4; i++) {
+                workers.push(uploadWorker());
             }
+            await Promise.all(workers);
 
             const totalTime = durationSec;
-            const speedMbps = (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
-            return parseFloat(speedMbps);
+            return (totalBytes * 8 / (1024 * 1024 * totalTime)).toFixed(2);
         }
 
+        // ИСПРАВЛЕННЫЙ ПИНГ - используем Image для обхода CORS
         async function measurePing() {
+            const testUrls = [
+                'https://www.google.com/favicon.ico',
+                'https://yastatic.net/islands/_/Ki6DdirQ7DHq6EN8w3En6z0E6iA.svg'
+            ];
+            
             const pings = [];
-            const testServer = 'https://www.google.com/favicon.ico';
-
-            for (let i = 0; i < 5; i++) {
+            
+            for (let i = 0; i < 10; i++) {
+                const img = new Image();
                 const start = performance.now();
-                try {
-                    await fetch(testServer + '?t=' + Date.now(), { cache: 'no-store' });
-                    pings.push(performance.now() - start);
-                } catch (e) {}
-                await new Promise(function (r) { setTimeout(r, 200); });
+                
+                return new Promise((resolve) => {
+                    img.onload = img.onerror = () => {
+                        pings.push(performance.now() - start);
+                        resolve();
+                    };
+                    img.src = testUrls[i % testUrls.length] + '?t=' + Date.now();
+                    setTimeout(resolve, 2000); // таймаут 2 сек
+                });
             }
-
-            if (!pings.length) return 0;
-            const avgPing = pings.reduce(function (a, b) { return a + b; }, 0) / pings.length;
+            
+            if (pings.length === 0) return 999;
+            const avgPing = pings.reduce((a, b) => a + b, 0) / pings.length;
             return Math.round(avgPing);
         }
 
         function getSpeedRating(speed) {
+            if (speed >= 500) return '🦸‍♂️ ГИГАБИТНОЕ соединение';
             if (speed >= 100) return '⚡ Сверхбыстрое соединение';
             if (speed >= 50) return '🚀 Очень быстро';
             if (speed >= 20) return '✅ Быстрое соединение';
@@ -325,10 +353,12 @@
             return '🐌 Медленное соединение';
         }
 
+        // ИСПРАВЛЕННАЯ ИСТОРИЯ
         function updateHistory() {
             const historyEl = document.getElementById('history');
+            
             if (testHistory.length === 0) {
-                historyEl.innerHTML =
+                historyEl.innerHTML = 
                     '<div class="empty-state">' +
                         '<div>📊</div>' +
                         '<h3>История тестов</h3>' +
@@ -337,19 +367,27 @@
                 return;
             }
 
-            historyEl.innerHTML =
+            historyEl.innerHTML = 
                 '<h3 style="margin-bottom: 20px;">📈 Последние тесты</h3>' +
-                testHistory.map(function (test) {
+                testHistory.map(function(test) {
                     return (
                         '<div class="history-item">' +
                             '<div>' +
-                                '<strong>' + test.download + ' Мбит/с</strong> ↓ | ' + test.upload + ' Мбит/с ↑' +
+                                '<strong>' + parseFloat(test.download).toFixed(1) + ' Мбит/с</strong> ↓ | ' + parseFloat(test.upload).toFixed(1) + ' Мбит/с ↑' +
                                 '<br><small>' + new Date(test.timestamp).toLocaleString('ru-RU') + '</small>' +
                             '</div>' +
                             '<div style="color: #666;">' + test.ping + ' мс</div>' +
                         '</div>'
                     );
                 }).join('');
+        }
+
+        function saveHistory() {
+            try {
+                localStorage.setItem('speedTests', JSON.stringify(testHistory));
+            } catch (e) {
+                console.log('Ошибка сохранения истории:', e);
+            }
         }
 
         async function runSpeedTest() {
@@ -370,28 +408,31 @@
             startTimer();
 
             try {
+                // 1. Пинг (5 сек)
                 const ping = await measurePing();
                 document.getElementById('pingValue').textContent = ping + ' мс';
-                updateProgress(10);
+                updateProgress(5);
 
+                // 2. Download 80 сек
                 const downloadDuration = 80;
-                const uploadDuration = TEST_DURATION - downloadDuration;
-
                 const downloadSpeed = await measureDownloadSpeedLong(downloadDuration);
                 document.getElementById('downloadSpeed').textContent = downloadSpeed + ' Мбит/с';
                 updateProgress(70);
 
+                // 3. Upload 35 сек
+                const uploadDuration = 35;
                 const uploadSpeed = await measureUploadSpeedLong(uploadDuration);
                 document.getElementById('uploadSpeed').textContent = uploadSpeed + ' Мбит/с';
                 updateProgress(100);
 
-                const speedLabel = getSpeedRating(downloadSpeed);
+                const speedLabel = getSpeedRating(parseFloat(downloadSpeed));
                 updateSpeedDisplay(downloadSpeed, speedLabel);
 
+                // СОХРАНЕНИЕ В ИСТОРИЮ
                 const testResult = {
                     timestamp: Date.now(),
-                    download: downloadSpeed,
-                    upload: uploadSpeed,
+                    download: parseFloat(downloadSpeed),
+                    upload: parseFloat(uploadSpeed),
                     ping: ping,
                     label: speedLabel
                 };
@@ -400,35 +441,31 @@
                 if (testHistory.length > 10) {
                     testHistory = testHistory.slice(0, 10);
                 }
-                localStorage.setItem('speedTests', JSON.stringify(testHistory));
-                updateHistory();
+                saveHistory(); // явное сохранение
+                updateHistory(); // обновление интерфейса
 
                 showStatus('✅ Тест завершен! ' + speedLabel, 'fast');
             } catch (error) {
-                showStatus('❌ Ошибка теста: ' + (error && error.message ? error.message : error), 'slow');
+                showStatus('❌ Ошибка теста: ' + error.message, 'slow');
             } finally {
                 isTesting = false;
-                clearInterval(timerInterval);
-                const statusEl = document.getElementById('testStatus');
-                setTimeout(function () {
-                    statusEl.textContent = '';
-                    statusEl.style.display = 'none';
-                }, 3000);
+                if (timerInterval) clearInterval(timerInterval);
                 testButton.disabled = false;
                 testButton.textContent = '🔄 Повторить тест';
-                setTimeout(function () {
-                    progressBar.style.display = 'none';
-                }, 3000);
+                setTimeout(function() {
+                    document.getElementById('testStatus').style.display = 'none';
+                    document.getElementById('progressBar').style.display = 'none';
+                }, 5000);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        // Инициализация при загрузке
+        window.addEventListener('load', function() {
             updateHistory();
-
             if ('connection' in navigator) {
-                var conn = navigator.connection;
-                var speedInfo = (conn.downlink || '?') + ' Мбит/с (' + conn.effectiveType + ')';
-                document.getElementById('speedLabel').textContent = 'Текущая оценка: ' + speedInfo;
+                const conn = navigator.connection;
+                document.getElementById('speedLabel').textContent = 
+                    `Оценка: ${conn.downlink || '?'} Мбит/с (${conn.effectiveType})`;
             }
         });
     </script>
